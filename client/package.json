@@ -22,9 +22,7 @@
     "vuetify": "^0.15.2",
     "vuex": "^2.4.0",
     "vuex-persistedstate": "^2.0.0",
-    "vuex-router-sync": "^4.3.1"
-  },
-  "devDependencies": {
+    "vuex-router-sync": "^4.3.1",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",

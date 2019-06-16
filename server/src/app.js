@@ -21,6 +21,8 @@ app.use(bodyParser.json())
 app.use(cors())
 app.use(express.static(path.join(__dirname, "../../client/dist")));
 
+const TOKEN="2bOOX7v97oBMgm0KBgR_pJmWH-fM9dhl-nD84N5w3lk";
+
 app.use(function(req, res, next) {
   // Website you wish to allow to connect
   res.header("Access-Control-Allow-Origin", "*");
@@ -173,7 +175,7 @@ router.post("/dessert", function(req, res) {
   }
 });
 
-app.post("https://optimisely-full-stack.herokuapp.com/", function(req, res) {
+router.post("/", function(req, res) {
   console.log("oprimtilsey00");
   console.log("body",req.body);
 });

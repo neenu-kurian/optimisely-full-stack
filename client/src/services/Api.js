@@ -7,5 +7,5 @@ export default () => {
     headers: {
       Authorization: `Bearer ${store.state.token}`
     }
-  });
+  })
 }

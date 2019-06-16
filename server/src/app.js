@@ -173,6 +173,7 @@ router.post("/dessert", function(req, res) {
   }
 });
 
-router.post("https://optimisely-full-stack.herokuapp.com/", function(req, res) {
+app.post("https://optimisely-full-stack.herokuapp.com/", function(req, res) {
   console.log("oprimtilsey00");
+  console.log("body",req.body);
 });

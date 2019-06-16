@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     submitUserChoice() {
-        let url="http://localhost:3000/userinput";
+        let url="userinput";
         let param = {
           prixfixemeal: this.prixfixemeal
         };
@@ -73,7 +73,7 @@ export default {
         }); 
     },
     submitAppetizer() {
-        let url="http://localhost:3000/appetizer";
+        let url="appetizer";
         let param = {
           appetizer: this.appetizer
         };
@@ -87,7 +87,7 @@ export default {
         }); 
     },
     submitEntree() {
-        let url="http://localhost:3000/entree";
+        let url="entree";
         let param = {
           entree: this.entree
         };
@@ -101,7 +101,7 @@ export default {
         }); 
     },
     submitDessert() {
-        let url="http://localhost:3000/dessert";
+        let url="dessert";
         let param = {
           dessert: this.dessert
         };

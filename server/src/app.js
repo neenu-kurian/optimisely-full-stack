@@ -16,6 +16,9 @@ const optimizelySDK = require("@optimizely/optimizely-sdk");
 const defaultLogger = require("@optimizely/optimizely-sdk/lib/plugins/logger");
 const LOG_LEVEL = require("@optimizely/optimizely-sdk/lib/utils/enums")
   .LOG_LEVEL;
+var defaultErrorHandler = require("@optimizely/optimizely-sdk").errorHandler;
+
+
 //app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
@@ -71,7 +74,8 @@ router.post("/login", function(req, res) {
       datafile: datafile,
       logger: defaultLogger.createLogger({
         logLevel: LOG_LEVEL.INFO
-      })
+      }),
+      errorHandler: defaultErrorHandler
     });
 
     console.log("name", username);
@@ -87,6 +91,8 @@ router.post("/login", function(req, res) {
       username,
       attributes
     );
+
+    console.log("enabled",enabled);
 
     if (enabled) {
       dessert = optimizelyClientInstance.getFeatureVariableString(
@@ -178,4 +184,8 @@ router.post("/dessert", function(req, res) {
 router.post("/", function(req, res) {
   console.log("oprimtilsey00");
   console.log("body",req.body);
+  var request_signature= req.headers.get('X-Hub-Signature');
+  var computed_signature='sha1='+TOKEN;
+
+
 });

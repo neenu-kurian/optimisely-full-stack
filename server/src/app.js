@@ -55,7 +55,7 @@ router.get("/", function(req, res) {
 
 var username = "";
 var dessert = "";
-var app = "";
+var appt = "";
 var entree = "";
 var optimizelyClientInstance = "";
 
@@ -92,7 +92,7 @@ router.post("/login", function(req, res) {
         "dessert",
         username
       );
-      app = optimizelyClientInstance.getFeatureVariableString(
+      appt = optimizelyClientInstance.getFeatureVariableString(
         "prix-fixe-menu",
         "app",
         username
@@ -104,7 +104,7 @@ router.post("/login", function(req, res) {
       );
 
       console.log("   -- prix fixe --    ");
-      console.log("Appetizer: ", app);
+      console.log("Appetizer: ", appt);
       console.log("Entree: ", entree);
       console.log("Dessert: ", dessert);
       // var price = null; /* ? */
@@ -124,7 +124,7 @@ router.post("/login", function(req, res) {
         {
           variation: variation1,
           enabled: enabled,
-          appetizer: app,
+          appetizer: appt,
           dessert: dessert,
           entree: entree
         }
@@ -140,7 +140,7 @@ router.post("/login", function(req, res) {
         {
           variation: variation1,
           enabled: enabled,
-          appetizer: app,
+          appetizer: appt,
           dessert: dessert,
           entree: entree
         }

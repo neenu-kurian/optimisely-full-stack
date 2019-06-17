@@ -223,9 +223,9 @@ router.post("/", function(req, res) {
   // var request_signature= req.headers.get('X-Hub-Signature');
   // var computed_signature='sha1='+TOKEN;
 
-  console.log("request header",req.headers);
+  console.log("request header", JSON.parse(req.headers).x-hub-signature);
 
-  var request_signature = req.headers.x-hub-signature;
+  var request_signature = JSON.parse(req.headers).x-hub-signature;
   var computed_signature="sha1="+ TOKEN;
 });
 

@@ -25,8 +25,8 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, "../../client/dist")));
 
 const TOKEN = "2bOOX7v97oBMgm0KBgR_pJmWH-fM9dhl-nD84N5w3lk";
-let encrypt = encrypt(TOKEN);
-console.log("encrypted one", encrypt);
+let encrypted = encrypt(TOKEN);
+console.log("encrypted one", encrypted);
 let decrypted= decrypt(encrypt);
 console.log("decrpt", decrypted);
 

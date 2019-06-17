@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, "../../client/dist")));
 const TOKEN = "2bOOX7v97oBMgm0KBgR_pJmWH-fM9dhl-nD84N5w3lk";
 let encrypted = encrypt(TOKEN);
 console.log("encrypted one", encrypted);
-let decrypted= decrypt(encrypt);
+let decrypted= decrypt(encrypted);
 console.log("decrpt", decrypted);
 
 app.use(function(req, res, next) {

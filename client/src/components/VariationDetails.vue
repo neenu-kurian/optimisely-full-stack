@@ -1,41 +1,47 @@
 <template>
 <div class="container">
-  <div v-if="this.variation==='Menu_1'">
-    <h1>{{ variation }}</h1>
-    <hr>
-    <h4>-------------Appetizers-------------</h4>
-    <h4>Grilled Brussel Sports</h4>
-    <h4>-------------Entrees----------------</h4>
-    <h4>Salmon</h4>
-    <h4>-------------Desserts----------------</h4>
-    <h4>CheeseCake</h4>
-  </div>
-  <div v-else="this.variation==='Menu_2'">
-    <h1>{{ variation }}</h1>
-    <hr>
-    <h4>-------------Appetizers-------------</h4>
-    <h4>Garlic Bread</h4>
-    <h4>-------------Entrees----------------</h4>
-    <h4>Chicken Parm</h4>
-    <h4>-------------Desserts---------------</h4>
-    <h4>Chocolate Cake</h4>
-  </div>
-  <br>
-  <div v-if="this.featureEnabled">
-     The feature is enabled.
-     <div> Tonight we are also offering a prix fixe meal for $100, are you interested?Type y if interested</div>
-       <input type="text" v-model="prixfixemeal" @keyup="submitUserChoice()">
+    <div v-if="!this.login">
+        <p>The username is invalid , please try again</p>
+         <router-link tag="button" to="/" class="login-button">Go back to Login Page</router-link>
     </div>
-    <div v-if="this.prixfixemeal==='y'">
-       <div> Coming Right Up!</div>
-       <div> Would you like an appetiser</div>
-       <input type="text" v-model="appetizer" @keyup="submitAppetizer()">
-       <div> Would you like an entree</div>
-       <input type="text" v-model="entree" @keyup="submitEntree()">
-       <div>Would you like a dessert</div>
-       <input type="text" v-model="dessert" @keyup="submitDessert()">
+    <div v-else="this.login">
+        <div v-if="this.variation==='Menu_1'">
+            <h1>{{ variation }}</h1>
+            <hr>
+            <h4>-------------Appetizers-------------</h4>
+            <h4>Grilled Brussel Sports</h4>
+            <h4>-------------Entrees----------------</h4>
+            <h4>Salmon</h4>
+            <h4>-------------Desserts----------------</h4>
+             <h4>CheeseCake</h4>
+        </div>
+        <div v-else="this.variation==='Menu_2'">
+            <h1>{{ variation }}</h1>
+            <hr>
+            <h4>-------------Appetizers-------------</h4>
+            <h4>Garlic Bread</h4>
+            <h4>-------------Entrees----------------</h4>
+            <h4>Chicken Parm</h4>
+            <h4>-------------Desserts---------------</h4>
+            <h4>Chocolate Cake</h4>
+        </div>
+    
+        <br>
+        <div v-if="this.featureEnabled">
+             The feature is enabled.
+            <div> Tonight we are also offering a prix fixe meal for $100, are you interested?Type y if interested</div>
+            <input type="text" v-model="prixfixemeal" @keyup="submitUserChoice()">
+        </div>
+        <div v-if="this.prixfixemeal==='y'">
+            <div> Coming Right Up!</div>
+             <div> Would you like an appetiser</div>
+             <input type="text" v-model="appetizer" @keyup="submitAppetizer()">
+            <div> Would you like an entree</div>
+            <input type="text" v-model="entree" @keyup="submitEntree()">
+             <div>Would you like a dessert</div>
+            <input type="text" v-model="dessert" @keyup="submitDessert()">
+        </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -48,13 +54,14 @@ export default {
     return {
       variation: "",
       featureEnabled:"",
-      app:"",
+      appetizer:"",
       dessert:"",
       entree:"",
       prixfixemeal:"",
       appetizer:"",
       entree:"",
-      dessert:""
+      dessert:"",
+      login:true
     };
   },
   methods: {
@@ -66,7 +73,7 @@ export default {
        axios
         .post(url, param)
         .then(response => {
-          console.log("response data",response.data);
+          console.log("user choice",response.data);
         })
         .catch(error => {
           console.log(error);
@@ -80,7 +87,7 @@ export default {
        axios
         .post(url, param)
         .then(response => {
-          console.log("response data",response.data);
+          console.log("user choice app ",response.data);
         })
         .catch(error => {
           console.log(error);
@@ -94,7 +101,7 @@ export default {
        axios
         .post(url, param)
         .then(response => {
-          console.log("response data",response.data);
+          console.log("user choice entree",response.data);
         })
         .catch(error => {
           console.log(error);
@@ -108,7 +115,7 @@ export default {
        axios
         .post(url, param)
         .then(response => {
-          console.log("response data",response.data);
+          console.log("user choice dessert",response.data);
         })
         .catch(error => {
           console.log(error);
@@ -119,9 +126,13 @@ export default {
     EventBus.$on("variation", data => {
       this.variation = data.variation;
       this.featureEnabled = data.enabled;
-      this.app= data.app;
+      this.appetizer= data.appetizer;
       this.dessert = data.dessert;
       this.entree = data.entree;
+      this.login=true;
+    });
+     EventBus.$on("loginerror", data => {
+      this.login=data;
     });
   }
 };

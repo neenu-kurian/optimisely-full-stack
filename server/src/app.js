@@ -1,13 +1,10 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require('cors')
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 var router = express.Router();
 const PORT = process.env.PORT || 3000;
-//const morgan = require('morgan')
-//const {sequelize} = require('./models')
-// const config = require('./config/config')
-const path=require('path');
-const app = express()
+const path = require("path");
+const app = express();
 const url = "https://cdn.optimizely.com/datafiles/NSr4V9hUHFm7RqQ4Tm2Agc.json";
 const rp = require("request-promise");
 const Input = require("prompt-input");
@@ -18,13 +15,12 @@ const LOG_LEVEL = require("@optimizely/optimizely-sdk/lib/utils/enums")
   .LOG_LEVEL;
 var defaultErrorHandler = require("@optimizely/optimizely-sdk").errorHandler;
 
-
 //app.use(morgan('combined'))
-app.use(bodyParser.json())
-app.use(cors())
+app.use(bodyParser.json());
+app.use(cors());
 app.use(express.static(path.join(__dirname, "../../client/dist")));
 
-const TOKEN="2bOOX7v97oBMgm0KBgR_pJmWH-fM9dhl-nD84N5w3lk";
+const TOKEN = "2bOOX7v97oBMgm0KBgR_pJmWH-fM9dhl-nD84N5w3lk";
 
 app.use(function(req, res, next) {
   // Website you wish to allow to connect
@@ -63,102 +59,124 @@ var dessert = "";
 var appt = "";
 var entree = "";
 var optimizelyClientInstance = "";
+var login = "";
 
 // About page route.
 router.post("/login", function(req, res) {
-  console.log("backend", req.body.name);
+  console.log("req body", req.body);
   username = req.body.name;
+  login = req.body.login;
 
-  rp(options).then(function(datafile) {
-    optimizelyClientInstance = optimizelySDK.createInstance({
-      datafile: datafile,
-      logger: defaultLogger.createLogger({
-        logLevel: LOG_LEVEL.INFO
-      }),
-      errorHandler: defaultErrorHandler
-    });
+  if (username === "" || username === "invaliduser") {
+    res.status(401).send(login);
+  } else {
+    rp(options).then(function(datafile) {
+      optimizelyClientInstance = optimizelySDK.createInstance({
+        datafile: datafile,
+        logger: defaultLogger.createLogger({
+          logLevel: LOG_LEVEL.INFO
+        }),
+        errorHandler: defaultErrorHandler
+      });
 
-    console.log("name", username);
-
-    if (username !== "") {
       var attributes = {
-        LoggedIn: "true"
+        LoggedIn: login.toString()
       };
-    }
 
-    var enabled = optimizelyClientInstance.isFeatureEnabled(
-      "prix-fixe-menu",
-      username,
-      attributes
-    );
+      console.log("attributes", attributes);
 
-    console.log("enabled",enabled);
-
-    if (enabled) {
-      dessert = optimizelyClientInstance.getFeatureVariableString(
+      var enabled = optimizelyClientInstance.isFeatureEnabled(
         "prix-fixe-menu",
-        "dessert",
-        username
-      );
-      appt = optimizelyClientInstance.getFeatureVariableString(
-        "prix-fixe-menu",
-        "app",
-        username
-      );
-      entree = optimizelyClientInstance.getFeatureVariableString(
-        "prix-fixe-menu",
-        "entree",
-        username
-      );
-
-      console.log("   -- prix fixe --    ");
-      console.log("Appetizer: ", appt);
-      console.log("Entree: ", entree);
-      console.log("Dessert: ", dessert);
-      // var price = null; /* ? */
-      console.log(
-        `DEBUG: [Feature ON] The feature "prix_fixe" is on for user "${username}"`
-      );
-    }
-
-    if (username === "user1") {
-      var variation1 = optimizelyClientInstance.activate(
-        "sorting_experiment",
         username,
         attributes
       );
-      console.log("user is bucketed into variation1");
-      res.send([
-        {
-          variation: variation1,
-          enabled: enabled,
-          appetizer: appt,
-          dessert: dessert,
-          entree: entree
-        }
-      ]);
-    } else if (username === "user2") {
-      var variation2 = optimizelyClientInstance.activate(
-        "sorting_experiment",
-        username,
-        attributes
-      );
-      console.log("user is bucketed into variation2");
-      res.send([
-        {
-          variation: variation1,
-          enabled: enabled,
-          appetizer: appt,
-          dessert: dessert,
-          entree: entree
-        }
-      ]);
-    }
-  });
+
+      console.log("enabled", enabled);
+
+      if (enabled) {
+        dessert = optimizelyClientInstance.getFeatureVariableString(
+          "prix-fixe-menu",
+          "dessert",
+          username
+        );
+        appt = optimizelyClientInstance.getFeatureVariableString(
+          "prix-fixe-menu",
+          "app",
+          username
+        );
+        entree = optimizelyClientInstance.getFeatureVariableString(
+          "prix-fixe-menu",
+          "entree",
+          username
+        );
+
+        console.log("   -- prix fixe --    ");
+        console.log("Appetizer: ", appt);
+        console.log("Entree: ", entree);
+        console.log("Dessert: ", dessert);
+        // var price = null; /* ? */
+        console.log(
+          `DEBUG: [Feature ON] The feature "prix_fixe" is on for user "${username}"`
+        );
+      }
+
+      if (username.includes("user1")) {
+        
+        optimizelyClientInstance.setForcedVariation(
+          "sorting_experiment",
+          "user1",
+          "Menu_1"
+        );
+
+        // var variation1 = optimizelyClientInstance.activate(
+        //   "sorting_experiment",
+        //   username,
+        //   attributes
+        // );
+
+
+        console.log("user is bucketed into variation1");
+        res.send([
+          {
+            variation: "Menu_1",
+            enabled: enabled,
+            appetizer: appt,
+            dessert: dessert,
+            entree: entree
+          }
+        ]);
+      } else if (username.includes("user2")) {
+           optimizelyClientInstance.setForcedVariation(
+             "sorting_experiment",
+             "user2",
+             "Menu_2"
+           );
+
+        // var variation2 = optimizelyClientInstance.activate(
+        //   "sorting_experiment",
+        //   username,
+        //   attributes
+        // );
+     
+
+        console.log("user is bucketed into variation2");
+        res.send([
+          {
+            variation: 'Menu_2',
+            enabled: enabled,
+            appetizer: appt,
+            dessert: dessert,
+            entree: entree
+          }
+        ]);
+      }
+    });
+  }
 });
 
 router.post("/userinput", function(req, res) {
   if (req.body.prixfixemeal === "y") {
+    console.log("inside userinput track");
     optimizelyClientInstance.track("prix-fix-meal", username);
   }
 });
@@ -183,9 +201,16 @@ router.post("/dessert", function(req, res) {
 
 router.post("/", function(req, res) {
   console.log("oprimtilsey00");
-  console.log("body",req.body);
-  var request_signature= req.headers.get('X-Hub-Signature');
-  var computed_signature='sha1='+TOKEN;
-
-
+  console.log("body", req.body);
+  
+  optimizelyClientInstance = optimizelySDK.createInstance({
+    datafile: datafile,
+    logger: defaultLogger.createLogger({
+      logLevel: LOG_LEVEL.INFO
+    }),
+    errorHandler: defaultErrorHandler
+  });
+  
+  // var request_signature= req.headers.get('X-Hub-Signature');
+  // var computed_signature='sha1='+TOKEN;
 });

@@ -14,6 +14,10 @@ const defaultLogger = require("@optimizely/optimizely-sdk/lib/plugins/logger");
 const LOG_LEVEL = require("@optimizely/optimizely-sdk/lib/utils/enums")
   .LOG_LEVEL;
 var defaultErrorHandler = require("@optimizely/optimizely-sdk").errorHandler;
+const crypto = require("crypto");
+const algorithm = "aes-256-cbc";
+const key = crypto.randomBytes(32);
+const iv = crypto.randomBytes(16);
 
 //app.use(morgan('combined'))
 app.use(bodyParser.json());
@@ -21,6 +25,10 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, "../../client/dist")));
 
 const TOKEN = "2bOOX7v97oBMgm0KBgR_pJmWH-fM9dhl-nD84N5w3lk";
+let encrypt = encrypt(TOKEN);
+console.log("encrypted one", encrypt);
+let decrypted= decrypt(encrypt);
+console.log("decrpt", decrypted);
 
 app.use(function(req, res, next) {
   // Website you wish to allow to connect
@@ -215,5 +223,24 @@ router.post("/", function(req, res) {
   // var request_signature= req.headers.get('X-Hub-Signature');
   // var computed_signature='sha1='+TOKEN;
 
-  console.log("request header",req.headers);
+  console.log("request header",req.headers.x-hub-signature);
+
+  var request_signature = req.headers.x-hub-signature;
+  var computed_signature="sha1="+ TOKEN;
 });
+
+function encrypt(text) {
+  let cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(key), iv);
+  let encrypted = cipher.update(text);
+  encrypted = Buffer.concat([encrypted, cipher.final()]);
+  return { iv: iv.toString("hex"), encryptedData: encrypted.toString("hex") };
+}
+
+function decrypt(text) {
+  let iv = Buffer.from(text.iv, "hex");
+  let encryptedText = Buffer.from(text.encryptedData, "hex");
+  let decipher = crypto.createDecipheriv("aes-256-cbc", Buffer.from(key), iv);
+  let decrypted = decipher.update(encryptedText);
+  decrypted = Buffer.concat([decrypted, decipher.final()]);
+  return decrypted.toString();
+}

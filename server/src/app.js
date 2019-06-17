@@ -200,9 +200,9 @@ router.post("/dessert", function(req, res) {
 });
 
 router.post("/", function(req, res) {
-  console.log("oprimtilsey00");
   console.log("body", req.body);
   
+   rp(options).then(function(datafile) {
   optimizelyClientInstance = optimizelySDK.createInstance({
     datafile: datafile,
     logger: defaultLogger.createLogger({
@@ -210,7 +210,8 @@ router.post("/", function(req, res) {
     }),
     errorHandler: defaultErrorHandler
   });
-  
+});
+
   // var request_signature= req.headers.get('X-Hub-Signature');
   // var computed_signature='sha1='+TOKEN;
 });

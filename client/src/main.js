@@ -13,6 +13,10 @@ export const EventBus = new Vue({
   methods: {
     getVariation(variation) {
       this.$emit("variation", variation);
+    },
+    getLoginStatus(login) {
+      console.log('inside evetnbus',login);
+      this.$emit("loginerror", login);
     }
   }
 });

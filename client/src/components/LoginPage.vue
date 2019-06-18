@@ -18,7 +18,6 @@
 
 <script>
 import axios from "axios";
-// import bus from "./../bus.js";
 import {EventBus} from '../main.js'
 export default {
   data() {
@@ -28,21 +27,24 @@ export default {
     };
   },
   methods: {
-    
+    //method that gets called on login
     submitLogin() {
       let url = "login";
       let param = {
-        name: this.username
+        name: this.username,
+        login: true
       };
       axios
         .post(url, param)
         .then(response => {
           console.log("response data",response.data);
           this.variation=response.data[0].variation;
-           EventBus.getVariation(response.data[0]);
+          EventBus.getVariation(response.data[0]);
         })
         .catch(error => {
           console.log("error",error);
+          this.login=false;
+          EventBus.getLoginStatus(this.login);
         });
     }
   }

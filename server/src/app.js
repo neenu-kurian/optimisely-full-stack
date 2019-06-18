@@ -206,7 +206,7 @@ router.post("/dessert", function(req, res) {
 
 router.post("/", function(req, res) {
   console.log("body", req.body);
-  console.log("header",req.header);
+  console.log("header",req.headers);
 
   var request_signature = req.headers["x-hub-signature"];
   var computed_signature = "sha1=" + TOKEN;

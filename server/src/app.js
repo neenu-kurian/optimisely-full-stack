@@ -207,9 +207,10 @@ router.post("/dessert", function(req, res) {
 router.post("/", function(req, res) {
   console.log("body", req.body);
   console.log("header",req.headers);
+  console.log("data",req.data);
 
   var request_signature = req.headers["x-hub-signature"];
-  var computed_signature = "sha1=" + TOKEN;
+  var computed_signature = getComputedSignature(TOKEN,req.body);
 
   console.log('request sign',request_signature);
   console.log('comp sign',computed_signature);
@@ -222,7 +223,7 @@ router.post("/", function(req, res) {
   
   console.log('mismatch',mismatch);
 
-  if (!mismatch) {
+  if (mismatch!==0) {
     rp(options).then(function(datafile) {
       optimizelyClientInstance = optimizelySDK.createInstance({
         datafile: datafile,
@@ -249,4 +250,13 @@ function decrypt(text) {
   let decrypted = decipher.update(encryptedText);
   decrypted = Buffer.concat([decrypted, decipher.final()]);
   return decrypted.toString();
+}
+
+
+function getComputedSignature(token,payload) {
+  var hash = crypto
+    .createHmac("sha1", token)
+    .update(JSON.stringify(payload), "utf8")
+    .digest("hex");
+    return hash
 }

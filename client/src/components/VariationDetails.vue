@@ -65,6 +65,7 @@ export default {
     };
   },
   methods: {
+    //method tht gets called when user submits choice
     submitUserChoice() {
         let url="http://localhost:3000/userinput";
         let param = {
@@ -79,6 +80,7 @@ export default {
           console.log(error);
         }); 
     },
+     //method tht gets called when user submits appetizer
     submitAppetizer() {
         let url="http://localhost:3000/appetizer";
         let param = {
@@ -93,6 +95,7 @@ export default {
           console.log(error);
         }); 
     },
+     //method tht gets called when user submits entree
     submitEntree() {
         let url="http://localhost:3000/entree";
         let param = {
@@ -107,6 +110,7 @@ export default {
           console.log(error);
         }); 
     },
+     //method tht gets called when user submits dessert 
     submitDessert() {
         let url="http://localhost:3000/dessert";
         let param = {
@@ -126,9 +130,6 @@ export default {
     EventBus.$on("variation", data => {
       this.variation = data.variation;
       this.featureEnabled = data.enabled;
-      // this.appetizer= data.appetizer;
-      // this.dessert = data.dessert;
-      // this.entree = data.entree;
       this.login=true;
     });
      EventBus.$on("loginerror", data => {

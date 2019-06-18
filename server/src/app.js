@@ -7,7 +7,6 @@ const path = require("path");
 const app = express();
 const url = "https://cdn.optimizely.com/datafiles/NSr4V9hUHFm7RqQ4Tm2Agc.json";
 const rp = require("request-promise");
-const Input = require("prompt-input");
 const options = { uri: url, json: true };
 const optimizelySDK = require("@optimizely/optimizely-sdk");
 const defaultLogger = require("@optimizely/optimizely-sdk/lib/plugins/logger");
@@ -15,10 +14,8 @@ const LOG_LEVEL = require("@optimizely/optimizely-sdk/lib/utils/enums")
   .LOG_LEVEL;
 var defaultErrorHandler = require("@optimizely/optimizely-sdk").errorHandler;
 const crypto = require("crypto");
-const algorithm = "aes-256-cbc";
 const key = crypto.randomBytes(32);
 const iv = crypto.randomBytes(16);
-var optimizely = require("@optimizely/optimizely-sdk");
 var optimizelyEnums = require("@optimizely/optimizely-sdk").enums;
 app.use(bodyParser.json());
 app.use(cors());
@@ -31,14 +28,11 @@ let decrypted = decrypt(encrypted);
 console.log("decrpt", decrypted);
 
 app.use(function(req, res, next) {
-  // Website you wish to allow to connect
   res.header("Access-Control-Allow-Origin", "*");
-  // Request methods you wish to allow
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
-  // Pass to next layer of middleware
   next();
 });
 
@@ -69,9 +63,8 @@ var entree = "";
 var optimizelyClientInstance = "";
 var login = "";
 
-// About page route.
+//called when user is logged in 
 router.post("/login", function(req, res) {
-  console.log("req body", req.body);
   username = req.body.name;
   login = req.body.login;
 
@@ -93,17 +86,16 @@ router.post("/login", function(req, res) {
 
       console.log("attributes", attributes);
 
-      var enabled = optimizelyClientInstance.isFeatureEnabled(
-        "prix-fixe-menu",
+      var variation = optimizelyClientInstance.activate(
+        "sorting_experiment",
         username,
         attributes
       );
 
-      console.log("enabled", enabled);
-
-      optimizelyClientInstance.notificationCenter.addNotificationListener(
-        optimizelyEnums.NOTIFICATION_TYPES.DECISION,
-        onDecision
+      var enabled = optimizelyClientInstance.isFeatureEnabled(
+        "prix-fixe-menu",
+        username,
+        attributes
       );
 
       if (enabled) {
@@ -127,7 +119,7 @@ router.post("/login", function(req, res) {
         console.log("Appetizer: ", appt);
         console.log("Entree: ", entree);
         console.log("Dessert: ", dessert);
-        // var price = null; /* ? */
+  
         console.log(
           `DEBUG: [Feature ON] The feature "prix_fixe" is on for user "${username}"`
         );
@@ -168,19 +160,23 @@ router.post("/login", function(req, res) {
           }
         ]);
       }
+      
+      //adding notification listener
+      optimizelyClientInstance.notificationCenter.addNotificationListener(
+        optimizelyEnums.NOTIFICATION_TYPES.DECISION,
+        onDecision
+      );
     });
   }
 });
 
 router.post("/userinput", function(req, res) {
   if (req.body.prixfixemeal === "y") {
-    console.log("inside userinput track");
     optimizelyClientInstance.track("prix-fix-meal", username);
   }
 });
 
 router.post("/appetizer", function(req, res) {
-  console.log("inside appetixer", req.body.appetizer);
   if (req.body.appetizer === "y") {
     optimizelyClientInstance.track("order-app", username);
   }
@@ -198,25 +194,25 @@ router.post("/dessert", function(req, res) {
   }
 });
 
+//function that listens for webhook events
 router.post("/", function(req, res) {
   console.log("body", req.body);
   console.log("header", req.headers);
-  console.log("data", req.data);
-
+  
   var request_signature = req.headers["x-hub-signature"];
   var computed_signature = getComputedSignature(TOKEN, req.body);
 
   console.log("request sign", request_signature);
   console.log("comp sign", computed_signature);
 
+  //to prevent timing attacks the below type of comparison is done
   var mismatch = 0;
   for (var i = 0; i < request_signature.length; ++i) {
     mismatch |=
       request_signature.charCodeAt(i) ^ computed_signature.charCodeAt(i);
   }
 
-  console.log("mismatch", mismatch);
-
+  
   if (mismatch !== 0) {
     rp(options).then(function(datafile) {
       optimizelyClientInstance = optimizelySDK.createInstance({
@@ -230,6 +226,7 @@ router.post("/", function(req, res) {
   }
 });
 
+//to encrypt token
 function encrypt(text) {
   let cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(key), iv);
   let encrypted = cipher.update(text);
@@ -237,6 +234,7 @@ function encrypt(text) {
   return { iv: iv.toString("hex"), encryptedData: encrypted.toString("hex") };
 }
 
+//to decrypt token
 function decrypt(text) {
   let iv = Buffer.from(text.iv, "hex");
   let encryptedText = Buffer.from(text.encryptedData, "hex");
@@ -246,6 +244,7 @@ function decrypt(text) {
   return decrypted.toString();
 }
 
+//function to calculated signature using hmac sha1 hex
 function getComputedSignature(token, payload) {
   var hash = crypto
     .createHmac("sha1", token)
@@ -255,9 +254,6 @@ function getComputedSignature(token, payload) {
 }
 
 function onDecision(decisionObject) {
-  // Access type on decisionObject to get type of decision
-  console.log("motification", decisionObject.type);
-  // Access decisionInfo on decisionObject which
-  // will have form as per type of decision.
-  console.log(decisionObject.decisionInfo);
+  console.log("decisionObject type", decisionObject.type);
+  console.log("decisionObject decisioninfo", decisionObject.decisionInfo);
 }

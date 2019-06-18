@@ -18,8 +18,8 @@ const crypto = require("crypto");
 const algorithm = "aes-256-cbc";
 const key = crypto.randomBytes(32);
 const iv = crypto.randomBytes(16);
-
-//app.use(morgan('combined'))
+var optimizely = require("@optimizely/optimizely-sdk");
+var optimizelyEnums = require("@optimizely/optimizely-sdk").enums;
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, "../../client/dist")));
@@ -101,6 +101,11 @@ router.post("/login", function(req, res) {
 
       console.log("enabled", enabled);
 
+      optimizelyClientInstance.notificationCenter.addNotificationListener(
+        optimizelyEnums.NOTIFICATION_TYPES.DECISION,
+        onDecision
+      );
+
       if (enabled) {
         dessert = optimizelyClientInstance.getFeatureVariableString(
           "prix-fixe-menu",
@@ -135,12 +140,6 @@ router.post("/login", function(req, res) {
           "Menu_1"
         );
 
-        // var variation1 = optimizelyClientInstance.activate(
-        //   "sorting_experiment",
-        //   username,
-        //   attributes
-        // );
-
         console.log("user is bucketed into variation1");
         res.send([
           {
@@ -157,12 +156,6 @@ router.post("/login", function(req, res) {
           "user2",
           "Menu_2"
         );
-
-        // var variation2 = optimizelyClientInstance.activate(
-        //   "sorting_experiment",
-        //   username,
-        //   attributes
-        // );
 
         console.log("user is bucketed into variation2");
         res.send([
@@ -187,6 +180,7 @@ router.post("/userinput", function(req, res) {
 });
 
 router.post("/appetizer", function(req, res) {
+  console.log("inside appetixer", req.body.appetizer);
   if (req.body.appetizer === "y") {
     optimizelyClientInstance.track("order-app", username);
   }
@@ -200,30 +194,30 @@ router.post("/entree", function(req, res) {
 
 router.post("/dessert", function(req, res) {
   if (req.body.dessert === "y") {
-    optimizelyClientInstance.track("Order-dessert", username);
+    optimizelyClientInstance.track("Order-desser", username);
   }
 });
 
 router.post("/", function(req, res) {
   console.log("body", req.body);
-  console.log("header",req.headers);
-  console.log("data",req.data);
+  console.log("header", req.headers);
+  console.log("data", req.data);
 
   var request_signature = req.headers["x-hub-signature"];
-  var computed_signature = getComputedSignature(TOKEN,req.body);
+  var computed_signature = getComputedSignature(TOKEN, req.body);
 
-  console.log('request sign',request_signature);
-  console.log('comp sign',computed_signature);
+  console.log("request sign", request_signature);
+  console.log("comp sign", computed_signature);
 
   var mismatch = 0;
   for (var i = 0; i < request_signature.length; ++i) {
     mismatch |=
       request_signature.charCodeAt(i) ^ computed_signature.charCodeAt(i);
   }
-  
-  console.log('mismatch',mismatch);
 
-  if (mismatch!==0) {
+  console.log("mismatch", mismatch);
+
+  if (mismatch !== 0) {
     rp(options).then(function(datafile) {
       optimizelyClientInstance = optimizelySDK.createInstance({
         datafile: datafile,
@@ -252,11 +246,18 @@ function decrypt(text) {
   return decrypted.toString();
 }
 
-
-function getComputedSignature(token,payload) {
+function getComputedSignature(token, payload) {
   var hash = crypto
     .createHmac("sha1", token)
     .update(JSON.stringify(payload), "utf8")
     .digest("hex");
-    return hash
+  return hash;
+}
+
+function onDecision(decisionObject) {
+  // Access type on decisionObject to get type of decision
+  console.log("motification", decisionObject.type);
+  // Access decisionInfo on decisionObject which
+  // will have form as per type of decision.
+  console.log(decisionObject.decisionInfo);
 }

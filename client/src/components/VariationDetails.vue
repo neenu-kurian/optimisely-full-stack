@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     submitUserChoice() {
-        let url="userinput";
+        let url="http://localhost:3000/userinput";
         let param = {
           prixfixemeal: this.prixfixemeal
         };
@@ -80,7 +80,7 @@ export default {
         }); 
     },
     submitAppetizer() {
-        let url="appetizer";
+        let url="http://localhost:3000/appetizer";
         let param = {
           appetizer: this.appetizer
         };
@@ -94,7 +94,7 @@ export default {
         }); 
     },
     submitEntree() {
-        let url="entree";
+        let url="http://localhost:3000/entree";
         let param = {
           entree: this.entree
         };
@@ -108,7 +108,7 @@ export default {
         }); 
     },
     submitDessert() {
-        let url="dessert";
+        let url="http://localhost:3000/dessert";
         let param = {
           dessert: this.dessert
         };
@@ -126,9 +126,9 @@ export default {
     EventBus.$on("variation", data => {
       this.variation = data.variation;
       this.featureEnabled = data.enabled;
-      this.appetizer= data.appetizer;
-      this.dessert = data.dessert;
-      this.entree = data.entree;
+      // this.appetizer= data.appetizer;
+      // this.dessert = data.dessert;
+      // this.entree = data.entree;
       this.login=true;
     });
      EventBus.$on("loginerror", data => {

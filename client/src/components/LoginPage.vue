@@ -29,7 +29,7 @@ export default {
   methods: {
     
     submitLogin() {
-      let url = "login";
+      let url = "http://localhost:3000/login";
       let param = {
         name: this.username,
         login: true

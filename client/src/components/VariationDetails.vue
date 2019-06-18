@@ -67,7 +67,7 @@ export default {
   methods: {
     //method tht gets called when user submits choice
     submitUserChoice() {
-      let url = "http://localhost:3000/userinput";
+      let url = "userinput";
       let param = {
         prixfixemeal: this.prixfixemeal
       };
@@ -82,7 +82,7 @@ export default {
     },
     //method tht gets called when user submits appetizer
     submitAppetizer() {
-      let url = "http://localhost:3000/appetizer";
+      let url = "appetizer";
       let param = {
         appetizer: this.appetizer
       };
@@ -97,7 +97,7 @@ export default {
     },
     //method tht gets called when user submits entree
     submitEntree() {
-      let url = "http://localhost:3000/entree";
+      let url = "entree";
       let param = {
         entree: this.entree
       };
@@ -112,7 +112,7 @@ export default {
     },
     //method tht gets called when user submits dessert
     submitDessert() {
-      let url = "http://localhost:3000/dessert";
+      let url = "dessert";
       let param = {
         dessert: this.dessert
       };

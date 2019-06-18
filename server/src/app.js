@@ -23,9 +23,8 @@ app.use(express.static(path.join(__dirname, "../../client/dist")));
 
 const TOKEN = "PPwWaWGC8rrBx6dJhPyKrJ0_1bq_0gn1-tYnoWJ_OC0";
 let encrypted = encrypt(TOKEN);
-console.log("encrypted one", encrypted);
+
 let decrypted = decrypt(encrypted);
-console.log("decrpt", decrypted);
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

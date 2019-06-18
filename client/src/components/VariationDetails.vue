@@ -151,5 +151,17 @@ export default {
   color: white;
   font-style: italic;
   font-family: monospace;
+  margin: 0 auto;
+}
+.login-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 15px 40px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 45%;
+  border-radius: 20px;
+  font-size: 14px;
 }
 </style>

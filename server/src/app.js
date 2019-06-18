@@ -63,7 +63,7 @@ var entree = "";
 var optimizelyClientInstance = "";
 var login = "";
 
-//called when user is logged in 
+//called when user is logged in
 router.post("/login", function(req, res) {
   username = req.body.name;
   login = req.body.login;
@@ -119,7 +119,7 @@ router.post("/login", function(req, res) {
         console.log("Appetizer: ", appt);
         console.log("Entree: ", entree);
         console.log("Dessert: ", dessert);
-  
+
         console.log(
           `DEBUG: [Feature ON] The feature "prix_fixe" is on for user "${username}"`
         );
@@ -160,7 +160,7 @@ router.post("/login", function(req, res) {
           }
         ]);
       }
-      
+
       //adding notification listener
       optimizelyClientInstance.notificationCenter.addNotificationListener(
         optimizelyEnums.NOTIFICATION_TYPES.DECISION,
@@ -198,7 +198,7 @@ router.post("/dessert", function(req, res) {
 router.post("/", function(req, res) {
   console.log("body", req.body);
   console.log("header", req.headers);
-  
+
   var request_signature = req.headers["x-hub-signature"];
   var computed_signature = getComputedSignature(TOKEN, req.body);
 
@@ -212,7 +212,6 @@ router.post("/", function(req, res) {
       request_signature.charCodeAt(i) ^ computed_signature.charCodeAt(i);
   }
 
-  
   if (mismatch !== 0) {
     rp(options).then(function(datafile) {
       optimizelyClientInstance = optimizelySDK.createInstance({

@@ -210,6 +210,9 @@ router.post("/", function(req, res) {
   var request_signature = req.headers["x-hub-signature"];
   var computed_signature = "sha1=" + TOKEN;
 
+  console.log('request sign',request_signature);
+  console.log('comp sign',computed_signature);
+
   var mismatch = 0;
   for (var i = 0; i < request_signature.length; ++i) {
     mismatch |=

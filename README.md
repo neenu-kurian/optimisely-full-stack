@@ -1,7 +1,30 @@
-#To see online
-Please see https://optimisely-full-stack.herokuapp.com/
+# Fullstack application with Optimizely integration
 
-#To run locally
-Go to server and run node app.js
+A sample fullstack application created as part of Optimizely certification
 
-Go to client and run npm run dev
+## Demo
+
+Please refer https://optimisely-full-stack.herokuapp.com/
+
+### Prerequisites
+
+Install node packages by using below command
+
+```
+npm install
+```
+
+### Installing
+
+To start server
+
+```
+cd server; node app.js
+```
+
+And to start client
+
+```
+cd client ; npm run dev
+```
+

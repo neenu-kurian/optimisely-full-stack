@@ -85,6 +85,12 @@ router.post("/login", function(req, res) {
 
       console.log("attributes", attributes);
 
+      //adding notification listener
+      optimizelyClientInstance.notificationCenter.addNotificationListener(
+        optimizelyEnums.NOTIFICATION_TYPES.DECISION,
+        onDecision
+      );
+
       var variation = optimizelyClientInstance.activate(
         "sorting_experiment",
         username,
@@ -125,9 +131,10 @@ router.post("/login", function(req, res) {
       }
 
       if (username.includes("user1")) {
+        console.log("username has user1");
         optimizelyClientInstance.setForcedVariation(
           "sorting_experiment",
-          "user1",
+          username,
           "Menu_1"
         );
 
@@ -142,9 +149,10 @@ router.post("/login", function(req, res) {
           }
         ]);
       } else if (username.includes("user2")) {
+        console.log("username has user2");
         optimizelyClientInstance.setForcedVariation(
           "sorting_experiment",
-          "user2",
+          username,
           "Menu_2"
         );
 
@@ -159,12 +167,6 @@ router.post("/login", function(req, res) {
           }
         ]);
       }
-
-      //adding notification listener
-      optimizelyClientInstance.notificationCenter.addNotificationListener(
-        optimizelyEnums.NOTIFICATION_TYPES.DECISION,
-        onDecision
-      );
     });
   }
 });

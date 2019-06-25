@@ -8,7 +8,10 @@ Please refer https://optimisely-full-stack.herokuapp.com/
 
 ### Prerequisites
 
-Clone the folder
+Clone the folder using 
+```
+git clone https://github.com/neenu-kurian/optimisely-full-stack.git
+```
 
 Install node packages by using below command
 

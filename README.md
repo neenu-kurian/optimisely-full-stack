@@ -36,8 +36,8 @@ cd client ; npm run dev
 ### About
 The aim of this project is to create experiments using optimisely and setup feature tests based on audience.
 
-Here my audience is logged in audience.
+Here my audience is "logged in" audience.
 If you login with any userid that has user1 in it , then they will see variation1 and if your userid has user2, they see variation 2.
 Feature flag is setup , so that logged in audience also see a feature and there responses will be tracked by optimisely.
 
-Webhooks are also setup to notify when the datafile is updated (the file that has all optimisely info related to the project, such as experiment details, feature test details, audience condition ect) so that user will see the latest changes made in optimisely full stack app.
+Webhooks are also setup to notify when the datafile is updated (the file that has all optimisely info related to the project, such as experiment details, feature test details, audience condition etc) so that user will see the latest changes made in optimisely full stack app.

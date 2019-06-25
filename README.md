@@ -8,10 +8,12 @@ Please refer https://optimisely-full-stack.herokuapp.com/
 
 ### Prerequisites
 
+Clone the folder
+
 Install node packages by using below command
 
 ```
-npm install
+cd client then do npm install. cd server/src/ then do npm install
 ```
 
 ### Installing

@@ -85,6 +85,24 @@ router.post("/login", function(req, res) {
 
       console.log("attributes", attributes);
 
+      if (username.includes("user1")) {
+        console.log("username has user1");
+        optimizelyClientInstance.setForcedVariation(
+          "sorting_experiment",
+          username,
+          "Menu_1"
+        );
+      } else if (username.includes("user2")) {
+        console.log("username has user2");
+        optimizelyClientInstance.setForcedVariation(
+          "sorting_experiment",
+          username,
+          "Menu_2"
+        );
+
+        console.log("user is bucketed into variation2");
+      }
+
       //adding notification listener
       optimizelyClientInstance.notificationCenter.addNotificationListener(
         optimizelyEnums.NOTIFICATION_TYPES.DECISION,
@@ -131,14 +149,6 @@ router.post("/login", function(req, res) {
       }
 
       if (username.includes("user1")) {
-        console.log("username has user1");
-        optimizelyClientInstance.setForcedVariation(
-          "sorting_experiment",
-          username,
-          "Menu_1"
-        );
-
-        console.log("user is bucketed into variation1");
         res.send([
           {
             variation: "Menu_1",
@@ -149,14 +159,6 @@ router.post("/login", function(req, res) {
           }
         ]);
       } else if (username.includes("user2")) {
-        console.log("username has user2");
-        optimizelyClientInstance.setForcedVariation(
-          "sorting_experiment",
-          username,
-          "Menu_2"
-        );
-
-        console.log("user is bucketed into variation2");
         res.send([
           {
             variation: "Menu_2",

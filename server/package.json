@@ -21,7 +21,7 @@
     "crypto": "^1.0.1",
     "express": "^4.17.1",
     "joi": "^10.6.0",
-    "jsonwebtoken": "^8.0.0",
+    "jsonwebtoken": "^9.0.0",
     "morgan": "^1.8.2",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.0",
